@@ -24,7 +24,7 @@ public class Service01Stack extends Stack {
 
         ApplicationLoadBalancedTaskImageOptions taskImageOptions = ApplicationLoadBalancedTaskImageOptions.builder()
                 .containerName("aws_project01")
-                .image(ContainerImage.fromRegistry("devricardorocha/aws_project01:0.0.1-SNAPSHOT"))
+                .image(ContainerImage.fromRegistry("devricardorocha/aws_project01:0.0.2-SNAPSHOT"))
                 .containerPort(8080)
                 .logDriver(getLogDriver())
                 .build();
