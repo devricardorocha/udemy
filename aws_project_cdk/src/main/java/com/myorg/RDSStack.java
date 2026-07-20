@@ -18,12 +18,14 @@ public class RDSStack extends Stack {
     public RDSStack(final Construct scope, final String id, final Vpc vpc, final StackProps props) {
         super(scope, id, props);
 
+        // Pedir senha ao administratador
         CfnParameter dbPassword = CfnParameter.Builder
                 .create(this, "dbPassword")
                 .type("String")
                 .description("The RDS instance password")
                 .build();
 
+        // Disponibilizar a porta 3306 para conexão
         ISecurityGroup iSecurityGroup = SecurityGroup.fromSecurityGroupId(this, id, vpc.getVpcDefaultSecurityGroup());
         iSecurityGroup.addIngressRule(Peer.anyIpv4(), Port.tcp(3306));
 
@@ -33,13 +35,13 @@ public class RDSStack extends Stack {
                 .vpc(vpc)
                 .engine(getRDSEngine())
                 .credentials(getCredentials(dbPassword))
-                .instanceType(InstanceType.of(InstanceClass.BURSTABLE2, InstanceSize.MICRO))
+                .instanceType(InstanceType.of(InstanceClass.BURSTABLE3, InstanceSize.MICRO))
                 .multiAz(false)
                 .allocatedStorage(10)
                 .securityGroups(Collections.singletonList(iSecurityGroup))
                 .vpcSubnets(
                         SubnetSelection.builder()
-                                .subnets(vpc.getPrivateSubnets())
+                                .subnets(vpc.getPublicSubnets())
                                 .build())
                 .build();
 
